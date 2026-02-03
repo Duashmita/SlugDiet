@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undercover Barber - A Cop's Cut</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Title Screen -->
+        <div id="title-screen" class="screen active">
+            <div class="title-content">
+                <h1>UNDERCOVER BARBER</h1>
+                <h2>A Cop's Cut</h2>
+                <div class="badge-icon">🪪</div>
+                <p class="tagline">"The sharpest blade in the precinct"</p>
+                <button id="start-btn" class="main-btn">START MISSION</button>
+            </div>
+        </div>
+
+        <!-- Briefing Screen -->
+        <div id="briefing-screen" class="screen">
+            <div class="briefing-room">
+                <div class="briefing-header">
+                    <span class="classified">CLASSIFIED</span>
+                    <h2>MISSION BRIEFING</h2>
+                </div>
+                <div class="briefing-content">
+                    <div class="suspect-file">
+                        <div class="file-header">SUSPECT PROFILE</div>
+                        <div class="suspect-silhouette">👤</div>
+                        <div class="suspect-details">
+                            <p><strong>Codename:</strong> <span id="suspect-codename">???</span></p>
+                            <p><strong>Known Traits:</strong></p>
+                            <ul id="suspect-traits"></ul>
+                            <p><strong>Last Known Activity:</strong></p>
+                            <p id="suspect-activity" class="activity-text"></p>
+                        </div>
+                    </div>
+                    <div class="mission-details">
+                        <h3>YOUR COVER</h3>
+                        <p>You're going undercover as a barber at <strong>"Clip Joint"</strong> barbershop in downtown.</p>
+                        <p>The suspect is known to frequent this establishment. Your job:</p>
+                        <ul>
+                            <li>Cut hair like a pro (don't blow your cover)</li>
+                            <li>Engage customers in conversation</li>
+                            <li>Identify the suspect based on the intel</li>
+                            <li>When you're sure, make the call</li>
+                        </ul>
+                        <p class="warning">⚠️ Wrong arrests will cost you. Be certain before you act.</p>
+                    </div>
+                </div>
+                <button id="begin-mission-btn" class="main-btn">BEGIN UNDERCOVER OPERATION</button>
+            </div>
+        </div>
+
+        <!-- Barber Shop Screen -->
+        <div id="barbershop-screen" class="screen">
+            <div class="shop-header">
+                <div class="shop-name">✂️ CLIP JOINT ✂️</div>
+                <div class="stats">
+                    <span class="stat">Customers: <span id="customer-count">0</span>/5</span>
+                    <span class="stat">Reputation: <span id="reputation">⭐⭐⭐</span></span>
+                </div>
+            </div>
+
+            <div class="shop-main">
+                <div class="barber-chair-area">
+                    <div id="customer-display">
+                        <div class="customer-avatar" id="customer-avatar">🪑</div>
+                        <div class="customer-name" id="customer-name">Waiting for customer...</div>
+                    </div>
+                    <div id="haircut-area" class="hidden">
+                        <canvas id="hair-canvas" width="300" height="300"></canvas>
+                        <div class="tools">
+                            <button class="tool-btn active" data-tool="scissors">✂️ Scissors</button>
+                            <button class="tool-btn" data-tool="clippers">📟 Clippers</button>
+                            <button class="tool-btn" data-tool="razor">🪒 Razor</button>
+                        </div>
+                        <div class="cut-progress">
+                            <div class="progress-label">Haircut Progress:</div>
+                            <div class="progress-bar">
+                                <div id="cut-progress-fill" class="progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dialogue-area">
+                    <div id="dialogue-box">
+                        <div id="dialogue-history"></div>
+                    </div>
+                    <div id="dialogue-options">
+                        <button class="dialogue-btn" data-type="smalltalk">💬 Small Talk</button>
+                        <button class="dialogue-btn" data-type="probe">🔍 Probe</button>
+                        <button class="dialogue-btn" data-type="direct">⚡ Direct Question</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button id="next-customer-btn" class="action-btn">Next Customer 👋</button>
+                <button id="suspect-btn" class="action-btn danger hidden">🚨 SUSPECT IDENTIFIED</button>
+            </div>
+        </div>
+
+        <!-- Chase Screen (Street) -->
+        <div id="street-chase-screen" class="screen">
+            <div class="chase-header">
+                <h2>🏃 STREET CHASE 🏃</h2>
+                <div class="chase-stats">
+                    <span>Distance: <span id="street-distance">100</span>m</span>
+                    <span>Stamina: <span id="stamina-display">████████</span></span>
+                </div>
+            </div>
+            <div class="chase-arena" id="street-arena">
+                <div id="obstacles-container"></div>
+                <div id="cop-sprite" class="sprite cop">🏃</div>
+                <div id="suspect-sprite" class="sprite suspect">🏃‍♂️</div>
+            </div>
+            <div class="chase-controls">
+                <p>Use ARROW KEYS or tap buttons to dodge obstacles!</p>
+                <div class="mobile-controls">
+                    <button class="chase-btn" data-dir="left">⬅️</button>
+                    <button class="chase-btn" data-dir="jump">⬆️ JUMP</button>
+                    <button class="chase-btn" data-dir="right">➡️</button>
+                </div>
+                <button id="sprint-btn" class="action-btn">🔥 SPRINT (costs stamina)</button>
+            </div>
+        </div>
+
+        <!-- Chase Screen (Car) -->
+        <div id="car-chase-screen" class="screen">
+            <div class="chase-header">
+                <h2>🚗 CAR CHASE 🚗</h2>
+                <div class="chase-stats">
+                    <span>Distance: <span id="car-distance">200</span>m</span>
+                    <span>Car Health: <span id="car-health">████████</span></span>
+                </div>
+            </div>
+            <div class="chase-arena car-arena" id="car-arena">
+                <div id="road-lines"></div>
+                <div id="traffic-container"></div>
+                <div id="cop-car" class="car-sprite">🚔</div>
+                <div id="suspect-car" class="car-sprite suspect-car">🚗</div>
+            </div>
+            <div class="chase-controls">
+                <p>Dodge traffic and catch the suspect!</p>
+                <div class="mobile-controls">
+                    <button class="chase-btn" data-lane="0">Lane 1</button>
+                    <button class="chase-btn" data-lane="1">Lane 2</button>
+                    <button class="chase-btn" data-lane="2">Lane 3</button>
+                </div>
+                <button id="nitro-btn" class="action-btn">🔥 NITRO BOOST</button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="screen">
+            <div class="result-content">
+                <div id="result-icon" class="result-icon">🏆</div>
+                <h2 id="result-title">MISSION COMPLETE</h2>
+                <p id="result-message">You caught the right suspect!</p>
+                <div id="result-stats"></div>
+                <button id="play-again-btn" class="main-btn">PLAY AGAIN</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
